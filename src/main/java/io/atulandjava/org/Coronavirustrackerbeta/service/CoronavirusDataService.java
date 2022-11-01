@@ -22,6 +22,10 @@ public class CoronavirusDataService {
     /* URL for fetching raw data from a GitHub repo*/
     private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-01-2021.csv";
 
+    public List<LocationStats> getLocationStats() {
+        return locationStats;
+    }
+
     @PostConstruct
     @Scheduled(cron = "* * 1 * * *")
     public void fetchData() throws IOException, InterruptedException {
@@ -41,12 +45,9 @@ public class CoronavirusDataService {
             if(record.get("Province_State").equals(""))     locationStat.setState(record.get("Country_Region"));
             else    locationStat.setState(record.get("Province_State"));
             locationStat.setCountry(record.get("Country_Region"));
-            locationStat.setTotalReportedCases(Integer.parseInt(record.get("Confirmed")));
+            locationStat.setConfirmedCases(Integer.parseInt(record.get("Confirmed")));
             tempStats.add(locationStat);
         }
         locationStats.addAll(tempStats);
-        for(LocationStats stat: locationStats) {
-            System.out.println(stat.getState() + " " + stat.getCountry() + " " + stat.getTotalReportedCases());
-        }
     }
 }

@@ -3,7 +3,7 @@ package io.atulandjava.org.Coronavirustrackerbeta.model;
 public class LocationStats {
     private String state;
     private String country;
-    private int totalReportedCases;
+    private int confirmedCases;
 
     public String getState() {
         return state;
@@ -21,12 +21,12 @@ public class LocationStats {
         this.country = country;
     }
 
-    public int getTotalReportedCases() {
-        return totalReportedCases;
+    public int getConfirmedCases() {
+        return confirmedCases;
     }
 
-    public void setTotalReportedCases(int totalReportedCases) {
-        this.totalReportedCases = totalReportedCases;
+    public void setConfirmedCases(int totalReportedCases) {
+        this.confirmedCases = totalReportedCases;
     }
 
 }
