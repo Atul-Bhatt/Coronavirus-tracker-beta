@@ -1,5 +1,6 @@
 package io.atulandjava.org.Coronavirustrackerbeta.service;
 
+import io.atulandjava.org.Coronavirustrackerbeta.model.LocationStats;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,16 +13,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CoronavirusDataService {
-
-    /* URL for fetching raw data from a github repo*/
+    List<LocationStats> locationStats = new ArrayList<>();
+    /* URL for fetching raw data from a GitHub repo*/
     private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-01-2021.csv";
 
     @PostConstruct
     @Scheduled(cron = "* * 1 * * *")
     public void fetchData() throws IOException, InterruptedException {
+        /* Creating a temporary list to make it concurrency safe */
+        List<LocationStats> tempStats = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(VIRUS_DATA_URL))
@@ -32,9 +37,16 @@ public class CoronavirusDataService {
         StringReader csvParser = new StringReader(response.body());
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvParser);
         for (CSVRecord record : records) {
-            System.out.println("" + record.get("Province_State") + "            "
-                    + record.get("Country_Region") + "           " +
-                    record.get("Confirmed"));
+            LocationStats locationStat = new LocationStats();
+            if(record.get("Province_State").equals(""))     locationStat.setState(record.get("Country_Region"));
+            else    locationStat.setState(record.get("Province_State"));
+            locationStat.setCountry(record.get("Country_Region"));
+            locationStat.setTotalReportedCases(Integer.parseInt(record.get("Confirmed")));
+            tempStats.add(locationStat);
+        }
+        locationStats.addAll(tempStats);
+        for(LocationStats stat: locationStats) {
+            System.out.println(stat.getState() + " " + stat.getCountry() + " " + stat.getTotalReportedCases());
         }
     }
 }
