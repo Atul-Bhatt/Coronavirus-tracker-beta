@@ -5,27 +5,32 @@
 <head>
     <title>Coronavirus Tracking Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 
 <body>
 
-<div class="container-fluid py-5">
-    <h1 class="display-5 fw-bold" th:text="${totalReportedCases}"></h1>
-    <p class="col-md-8 fs-4">Coronavirus Total Reported Cases</p>
-</div>
+<div class="container">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold" th:text="${totalReportedCases}"></h1>
+        <p class="col-md-8 fs-4">Coronavirus Total Reported Cases</p>
+    </div>
 
-<table>
-    <tr>
-        <th>State</th>
-        <th>Country</th>
-        <th>Confirmed Cases</th>
-    </tr>
-    <tr th:each="locationStat : ${locationStats}">
-        <td th:text="${locationStat.state}"></td>
-        <td th:text="${locationStat.country}"></td>
-        <td th:text="${locationStat.confirmedCases}">yes</td>
-    </tr>
-</table>
+    <table class="table">
+        <tr>
+            <th>State</th>
+            <th>Country</th>
+            <th>Confirmed Cases</th>
+        </tr>
+        <tr th:each="locationStat : ${locationStats}">
+            <td th:text="${locationStat.state}"></td>
+            <td th:text="${locationStat.country}"></td>
+            <td th:text="${locationStat.confirmedCases}">yes</td>
+        </tr>
+    </table>
+
+</div>
 
 </body>
 
